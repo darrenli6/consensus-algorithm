@@ -1,12 +1,12 @@
 package main
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
-	"fmt"
-	"math/rand"
-	"strconv"
-	"time"
+"crypto/sha256"
+"encoding/hex"
+"fmt"
+"math/rand"
+"strconv"
+"time"
 )
 
 type Block struct {

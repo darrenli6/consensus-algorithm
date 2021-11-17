@@ -1,6 +1,10 @@
 package main
 
-import "sync"
+import (
+	"math/rand"
+	"sync"
+	"time"
+)
 
 //定义常量
 const raftCount =3
@@ -52,5 +56,69 @@ func main(){
 	//产生leader
 
     //创建三个节点
-	
+	for i:=0;i<raftCount;i++{
+		//定义make
+		Make(i)
+	}
 }
+
+
+
+// 创建Make
+func Make(me int ) *Raft{
+
+	rf:=&Raft{}
+	rf.me=me
+	//给 0 1 2 投票
+	rf.votedFor=-1
+    // 0 follwer状态
+    rf.state=0
+
+    rf.timeout=0
+
+    // 最初没有领导
+    rf.currentLeader=-1
+    //设置任期
+    rf.setTerm(0)
+
+    // 通道
+    rf.electCh=make(chan bool)
+    rf.message=make(chan bool)
+
+    rf.heartBeat=make(chan bool)
+
+    rf.hearbeatRe =make(chan bool)
+
+    //随机种子
+    rand.Seed(time.Now().UnixNano())
+
+    //选举的逻辑实现
+    go rf.election()
+    // 心跳检查
+    go rf.sendLderHear()
+
+
+	return nil
+
+}
+
+func (rf *Raft) setTerm(term int){
+	rf.currentTerm=term
+
+}
+
+// 设置节点选举
+func (rf *Raft) election(){
+
+	for {
+
+	}
+}
+
+// 产生随机值
+
+func randRange(min,max int64) int64{
+	// 用于心跳信息的时间间隔
+	return rand.Int63n(max-min)+min
+}
+
